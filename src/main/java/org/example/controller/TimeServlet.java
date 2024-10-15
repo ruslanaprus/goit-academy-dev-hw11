@@ -13,6 +13,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.ZoneId;
 
 @WebServlet(value = "/time")
@@ -33,16 +34,7 @@ public class TimeServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        engine = new TemplateEngine();
-
-        FileTemplateResolver resolver = new FileTemplateResolver();
-        resolver.setPrefix(getServletContext().getRealPath("/WEB-INF/templates/"));
-        resolver.setSuffix(".html");
-        resolver.setTemplateMode("HTML5");
-        resolver.setCharacterEncoding("UTF-8");
-        resolver.setOrder(engine.getTemplateResolvers().size());
-        resolver.setCacheable(false);
-        engine.addTemplateResolver(resolver);
+        this.engine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
     }
 
     @Override
@@ -64,14 +56,15 @@ public class TimeServlet extends HttpServlet {
         context.setVariable("zoneId", zoneId.getId());
         context.setVariable("formattedTime", formattedTime);
 
-        try {
+        try (PrintWriter writer = res.getWriter()) {
             engine.process("time", context, res.getWriter());
             logger.info("TimeServlet request completed successfully.");
-        } catch (Exception e){
-            logger.error("TimeServlet request failed.", e);
+        } catch (IOException e) {
+            logger.error("I/O error occurred.", e);
             sendThymeleafError(res, "Internal server error", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        } finally {
-            res.getWriter().close();
+        } catch (Exception e) {
+            logger.error("Template processing error.", e);
+            sendThymeleafError(res, "Internal server error", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -84,8 +77,9 @@ public class TimeServlet extends HttpServlet {
         context.setVariable("statusCode", statusCode);
         context.setVariable("message", errorMessage);
 
-        engine.process("error", context, res.getWriter());
-        res.getWriter().close();
+        try (PrintWriter writer = res.getWriter()) {
+            engine.process("error", context, writer);
+        }
 
         logger.debug("Rendered error page with status {} and message: {}", statusCode, errorMessage);
     }

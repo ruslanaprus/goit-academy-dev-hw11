@@ -6,15 +6,14 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.text.StringEscapeUtils;
 import org.example.service.TimezoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 
@@ -36,19 +35,12 @@ public class TimezoneValidateFilter extends HttpFilter {
     @Override
     public void init() throws ServletException {
         super.init();
-        engine = new TemplateEngine();
-
-        FileTemplateResolver resolver = new FileTemplateResolver();
-        resolver.setPrefix(getServletContext().getRealPath("/WEB-INF/templates/"));
-        resolver.setSuffix(".html");
-        resolver.setTemplateMode("HTML5");
-        resolver.setCacheable(false);
-        engine.addTemplateResolver(resolver);
+        this.engine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
     }
 
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String timezoneParam = StringEscapeUtils.escapeHtml4(req.getParameter("timezone"));
+        String timezoneParam = req.getParameter("timezone");
         logger.debug("Validating timezone parameter: {}", timezoneParam);
 
         ZoneId zoneId;
@@ -73,8 +65,9 @@ public class TimezoneValidateFilter extends HttpFilter {
         context.setVariable("statusCode", statusCode);
         context.setVariable("message", errorMessage);
 
-        engine.process("error", context, res.getWriter());
-        res.getWriter().close();
+        try (PrintWriter writer = res.getWriter()) {
+            engine.process("error", context, writer);
+        }
 
         logger.debug("Rendered error page with status {} and message: {}", statusCode, errorMessage);
     }
