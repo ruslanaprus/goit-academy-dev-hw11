@@ -20,4 +20,24 @@ public class TimeResponseBuilder {
 
         return formattedTimeWithZone;
     }
+
+    public String getCatImageForTime(ZonedDateTime zonedDateTime) {
+        int hour = zonedDateTime.getHour();
+
+        return switch (hour) {
+            case 0, 1, 2, 3, 4 -> "/images/sleeping_cat_at_night.png";
+            case 5 -> "/images/playful_cat.png";
+            case 6, 11, 17, 20 -> "/images/hungry_cat.png";
+            case 7, 14, 16, 22 -> "/images/sleepy_cat.png";
+            case 8 -> "/images/friendly_cat.png";
+            case 9 -> "/images/adventure_cat.png";
+            case 10 -> "/images/cute_cat.png";
+            case 12, 13 -> "/images/playing_with_friend.png";
+            case 15, 23 -> "/images/stretching_cat.png";
+            case 18 -> "/images/devious_cat.png";
+            case 19 -> "/images/cat_with_human.png";
+            case 21 -> "/images/cat_in_a_box.png";
+            default -> "/images/sleepy_cat.png";
+        };
+    }
 }

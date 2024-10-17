@@ -17,6 +17,7 @@ import org.thymeleaf.context.Context;
 import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @WebServlet(value = "/time")
 public class TimeServlet extends HttpServlet {
@@ -58,9 +59,15 @@ public class TimeServlet extends HttpServlet {
     }
 
     private void renderTimePage(HttpServletResponse res, ZoneId zoneId, String formattedTime) throws IOException {
+        ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
+
+        // get the correct cat image based on the current time
+        String catImage = timeResponseBuilder.getCatImageForTime(zonedDateTime);
+
         Context context = new Context();
         context.setVariable("zoneId", zoneId.getId());
         context.setVariable("formattedTime", formattedTime);
+        context.setVariable("catImage", catImage);  // pass the cat image to the template
 
         try {
             ThymeleafRenderer.render(res, engine, "time", context);

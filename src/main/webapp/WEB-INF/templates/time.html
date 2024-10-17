@@ -3,6 +3,10 @@
 <head>
     <title>Current Time</title>
     <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/fonts/Cattie-Regular.ttf') format('truetype');
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -11,15 +15,27 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            padding-top: 10px; /* Add padding to the top for visibility */
         }
         .container {
             text-align: center;
+            max-width: 600px; /* Optional: limit the width of the container */
+            margin: 0 auto; /* Center the container */
         }
         h1 {
+            font-family: 'CustomFont', Arial, sans-serif;
             color: #333;
+            margin-bottom: 20px; /* Add space below the title */
         }
         p {
             font-size: 20px;
+            margin: 10px 0; /* Add space above and below the paragraph */
+        }
+        .button-container {
+            display: flex; /* Use flexbox for buttons */
+            justify-content: center; /* Center buttons horizontally */
+            gap: 10px; /* Space between buttons */
+            margin-top: 5px; /* Add space above the button container */
         }
         a {
             text-decoration: none;
@@ -29,10 +45,16 @@
             border: 2px solid #008CBA;
             border-radius: 5px;
             transition: 0.3s;
+            display: inline-block; /* Make the links behave like buttons */
         }
         a:hover {
             background-color: #008CBA;
             color: white;
+        }
+        img {
+            max-width: 80%; /* Adjust the max-width for responsiveness */
+            height: auto;
+            margin: 10px 0; /* Add space above and below the image */
         }
     </style>
 </head>
@@ -40,7 +62,15 @@
 <div class="container">
     <h1>Current Time in <span th:text="${zoneId}">Zone</span></h1>
     <p>The current time is: <strong th:text="${formattedTime}">Time</strong></p>
-    <p><a href="/">Back to Home</a></p>
+
+    <!-- Display the cat image -->
+    <img th:src="${catImage}" alt="Cat image">
+
+    <!-- Navigation buttons -->
+    <div class="button-container">
+        <a href="/time?timezone=UTC">Get UTC Time</a>
+        <a href="/">Back to Home</a>
+    </div>
 </div>
 </body>
 </html>
