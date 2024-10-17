@@ -3,6 +3,7 @@ package org.example.controller;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,16 +43,47 @@ public class TimezoneValidateFilter extends HttpFilter {
         String timezoneParam = req.getParameter("timezone");
         logger.debug("Validating timezone parameter: {}", timezoneParam);
 
-        ZoneId zoneId;
-        try {
-            zoneId = timezoneService.getZoneId(timezoneParam);
-            req.setAttribute("zoneId", zoneId);
-        } catch (DateTimeException | IllegalArgumentException e) {
-            logger.warn("Invalid timezone parameter: {}", timezoneParam, e);
-            ThymeleafRenderer.renderErrorPage(res, engine, "Invalid timezone parameter!", HttpServletResponse.SC_BAD_REQUEST);
-            return;
+        ZoneId zoneId = null;
+
+        if (timezoneParam != null) {
+            try {
+                zoneId = timezoneService.getZoneId(timezoneParam);
+            } catch (DateTimeException | IllegalArgumentException e) {
+                logger.warn("Invalid timezone parameter: {}", timezoneParam, e);
+                ThymeleafRenderer.renderErrorPage(res, engine, "Invalid timezone parameter!", HttpServletResponse.SC_BAD_REQUEST);
+                return;
+            }
+        } else {
+            // if no timezone parameter is passed, try to get it from the cookies
+            Cookie[] cookies = req.getCookies();
+            String lastTimezone = getLastTimezoneFromCookies(cookies);
+            if (lastTimezone != null) {
+                try {
+                    zoneId = timezoneService.getZoneId(lastTimezone);
+                } catch (DateTimeException e) {
+                    logger.warn("Invalid timezone in cookie: {}", lastTimezone, e);
+                }
+            }
+
+            // fallback to UTC if no valid timezone found in cookies
+            if (zoneId == null) {
+                zoneId = ZoneId.of("UTC");
+            }
         }
 
+        req.setAttribute("zoneId", zoneId);
         chain.doFilter(req, res);
+    }
+
+    // retrieve the last timezone from a cookie
+    private String getLastTimezoneFromCookies(Cookie[] cookies) {
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("lastTimezone".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }
