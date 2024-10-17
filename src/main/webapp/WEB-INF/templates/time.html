@@ -20,16 +20,20 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            max-width: 1000px;
+            max-width: 1100px; /* Increased max width */
             width: 100%;
             padding: 20px;
         }
         .text-container {
-            flex: 1;
+            flex: 2;
             text-align: left;
-            padding-right: 20px;
+            padding-right: 40px;
+        }
+        .message{
+            font-size: 30px;
         }
         h1 {
+            font-size: 50px;
             font-family: 'CustomFont', Arial, sans-serif;
             color: #333;
             margin-bottom: 30px;
@@ -45,16 +49,17 @@
         }
         a {
             text-decoration: none;
-            color: #008CBA;
-            font-size: 18px;
+            color: white;
+            font-size: 16px;
             padding: 10px 20px;
+            background-color: #008CBA;
             border: 2px solid #008CBA;
             border-radius: 5px;
             transition: 0.3s;
+            text-align: center;
         }
         a:hover {
-            background-color: #008CBA;
-            color: white;
+            background-color: #005f73;
         }
         img {
             max-width: 600px;
@@ -63,15 +68,17 @@
         }
         .form-container {
             margin-top: 50px;
+            width: 100%; /* Make form-container take full width */
         }
         input[type="text"] {
             padding: 10px;
             font-size: 16px;
             border: 2px solid #ccc;
             border-radius: 5px;
-            width: 80%;
+            width: 100%; /* Set the text input width to full form width */
+            box-sizing: border-box;
         }
-        input[type="submit"] {
+        input[type="submit"], a {
             padding: 10px 20px;
             font-size: 16px;
             border: 2px solid #008CBA;
@@ -81,8 +88,14 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        input[type="submit"]:hover {
+        input[type="submit"]:hover, a:hover {
             background-color: #005f73;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%; /* Set the button container width to 100% */
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -91,24 +104,23 @@
     <!-- Text and buttons on the left -->
     <div class="text-container">
         <h1>Current Time in <span th:text="${zoneId}">Zone</span></h1>
-        <p>The current time is:</p>
-        <p><strong th:text="${formattedTime}">Time</strong></p>
+        <p>The current time is: <strong th:text="${formattedTime}">Time</strong></p>
 
-        <p><strong th:text="${catActivityMessage}">Activity</strong></p>
+        <p class="message"><strong th:text="${catActivityMessage}">Activity</strong></p>
 
         <!-- Timezone input form -->
         <div class="form-container">
             <form action="/time" method="GET">
                 <label for="timezone">Enter Timezone:</label><br>
                 <input type="text" id="timezone" name="timezone" placeholder="e.g. UTC+2"><br><br>
-                <input type="submit" value="Get Time">
-            </form>
-        </div>
 
-        <!-- Navigation buttons -->
-        <div class="button-container">
-            <a href="/time?timezone=UTC">Get UTC Time</a>
-            <a href="/">Back to Home</a>
+                <!-- Submit and navigation buttons in one line -->
+                <div class="action-buttons">
+                    <input type="submit" value="Get Time">
+                    <a href="/time?timezone=UTC">Get UTC Time</a>
+                    <a href="/">Back to Home</a>
+                </div>
+            </form>
         </div>
     </div>
 
