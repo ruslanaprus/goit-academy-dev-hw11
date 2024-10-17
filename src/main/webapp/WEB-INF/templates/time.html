@@ -15,7 +15,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            padding-top: 10px; /* Add padding to the top for visibility */
+            padding-top: 5px; /* Add padding to the top for visibility */
         }
         .container {
             text-align: center;
@@ -65,6 +65,8 @@
 
     <!-- Display the cat image -->
     <img th:src="${catImage}" alt="Cat image">
+
+    <p><strong th:text="${catActivityMessage}">Activity</strong></p>
 
     <!-- Navigation buttons -->
     <div class="button-container">

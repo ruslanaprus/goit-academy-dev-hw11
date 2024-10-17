@@ -60,14 +60,14 @@ public class TimeServlet extends HttpServlet {
 
     private void renderTimePage(HttpServletResponse res, ZoneId zoneId, String formattedTime) throws IOException {
         ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
-
-        // get the correct cat image based on the current time
+        String catActivityMessage = timeResponseBuilder.getCatActivityMessage(zonedDateTime);
         String catImage = timeResponseBuilder.getCatImageForTime(zonedDateTime);
 
         Context context = new Context();
         context.setVariable("zoneId", zoneId.getId());
         context.setVariable("formattedTime", formattedTime);
-        context.setVariable("catImage", catImage);  // pass the cat image to the template
+        context.setVariable("catImage", catImage);
+        context.setVariable("catActivityMessage", catActivityMessage);
 
         try {
             ThymeleafRenderer.render(res, engine, "time", context);

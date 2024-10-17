@@ -40,4 +40,26 @@ public class TimeResponseBuilder {
             default -> "/images/sleepy_cat.png";
         };
     }
+
+    public String getCatActivityMessage(ZonedDateTime zonedDateTime) {
+        int hour = zonedDateTime.getHour();
+        String activityMessage;
+
+        switch (hour) {
+            case 0, 1, 2, 3, 4 -> activityMessage = "The cat is sleeping. Don't dare to make a noise";
+            case 5 -> activityMessage = "Beware! The cat is ready to wake the human up";
+            case 6, 11, 17, 20 -> activityMessage = "The cat is hungry. Feed the cat!";
+            case 7, 14, 16, 22 -> activityMessage = "The cat is still sleepy. Don't disturb";
+            case 8 -> activityMessage = "The cat is on an adventure";
+            case 9 -> activityMessage = "The cat is exploring the world";
+            case 10 -> activityMessage = "The cat is ready to take a nap";
+            case 12, 13 -> activityMessage = "The cat is meeting with friends";
+            case 15, 23 -> activityMessage = "The cat is getting sleepy";
+            case 18 -> activityMessage = "The cat is feeling mischievous";
+            case 19 -> activityMessage = "The cat needs attention";
+            case 21 -> activityMessage = "The cat looks cute!";
+            default -> activityMessage = "The cat's activity is unknown.";
+        }
+        return activityMessage;
+    }
 }
