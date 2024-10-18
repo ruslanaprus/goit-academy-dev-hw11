@@ -1,41 +1,80 @@
 # Cattivity Time Servlet Project
 
-Cattivity Time is a Java servlet-based web application that displays the current time and cat activity based on a user's selected time zone. The application allows users to view time in different time zones and see a related cat image and activity message. It also stores the last selected time zone using cookies, providing a seamless user experience on subsequent visits.
+Welcome to **Cattivity Time**! This Java servlet-based web app is
+purrfect for anyone who wants to know the time—and see what our 
+feline friends might be up to based on the time of day. 
+Pick your time zone, and get a glimpse of the time with a related cat
+image and activity message. It even remembers your last selected 
+time zone with cookies, so it’s like your own personal time-keeping cat friend!
 
 ## Project Structure
 
 The project is organized into the following packages and components:
 
-- **org.example.controller**: Contains servlet and filter classes that handle HTTP requests, validate time zones, and render time-related pages.
+```shell
+├── 󱧼 src
+│   ├──  main
+│   │   ├──  java
+│   │   │   └──  org
+│   │   │       └──  example
+│   │   │           ├──  controller
+│   │   │           │   ├──  TimeServlet.java
+│   │   │           │   └──  TimezoneValidateFilter.java
+│   │   │           ├──  listener
+│   │   │           │   └──  TemplateEngineInitializer.java
+│   │   │           ├──  service
+│   │   │           │   ├──  TimeResponseBuilder.java
+│   │   │           │   ├──  TimezoneCookieService.java
+│   │   │           │   └──  TimezoneService.java
+│   │   │           └──  util
+│   │   │               └──  ThymeleafRenderer.java
+│   │   ├──  resources
+│   │   └──  webapp
+│   │       ├──  fonts
+│   │       ├──  images
+│   │       ├──  index.html
+│   │       └──  WEB-INF
+│   │           ├──  templates
+│   │           │   ├──  error.html
+│   │           │   └──  time.html
+│   │           └──  web.xml
+│   └──  test
+├──  build.gradle
+├──  gradle
+├──  gradlew
+├──  gradlew.bat
+└──  settings.gradle
+```
+- **org.example.controller**: Where all the purr-cessing happens—handling HTTP requests, checking time zones, and showing time-related pages with cute cat images.
 
-    - `TimeServlet`: A servlet that handles GET requests to `/time`, processes time zone information, and renders the time page with the appropriate cat image and activity.
-    - `TimezoneValidateFilter`: A filter that validates time zone parameters and retrieves time zone information from cookies.
-- **org.example.listener**: Contains the listener to initialize the template engine.
+  - `TimeServlet`: Handles your requests to `/time`, figures out the time zone, and shows the right time and cat photo.
+  - `TimezoneValidateFilter`: Makes sure the time zone is valid and checks your cookies for any saved time zones.
+- **org.example.listener**: Sets up the template engine, like getting the food bowls ready.
 
-    - `TemplateEngineInitializer`: Sets up the Thymeleaf template engine for rendering HTML templates.
-- **org.example.service**: Contains service classes that handle time formatting, time zone management, and cookie handling.
+  - `TemplateEngineInitializer`: Prepares Thymeleaf, our template engine, so it can serve up some fresh HTML.
+- **org.example.service**: Deals with time formatting, time zone details, and cookie storage—like the cat that knows when it’s time to be fed.
 
-    - `TimeResponseBuilder`: Provides methods to format the current time and retrieve relevant cat images and activity messages.
-    - `TimezoneService`: Manages conversion of time zone parameters into valid `ZoneId` objects.
-    - `TimezoneCookieService`: Handles storing and retrieving time zone data using cookies.
-- **org.example.util**: Contains utility classes for rendering HTML pages.
+  - `TimeResponseBuilder`: Formats the time and fetches just the right cat picture and message.
+  - `TimezoneService`: Turns your chosen time zone into a valid `ZoneId`.
+  - `TimezoneCookieService`: Saves and retrieves your previous time zone choice using cookies. The cookie stays fresh for an hour.
+- **org.example.util**: Helps out with rendering HTML pages, like a cat making sure everything’s just right.
 
-    - `ThymeleafRenderer`: Renders Thymeleaf templates into HTTP responses, including handling error pages.
-- **webapp/WEB-INF/templates**: Stores the Thymeleaf templates for the HTML pages.
+  - `ThymeleafRenderer`: Handles Thymeleaf templates, including error pages for when things don't go as planned.
+- **webapp/WEB-INF/templates**: Home of the HTML templates for all the pages.
 
-    - `time.html`: The main template for displaying the time, cat image, and activity.
-    - `error.html`: Template used for displaying error messages.
+  - `time.html`: The main template for showing the time, cat photo, and activity.
+  - `error.html`: The template that gives you a heads-up if something’s not quite right.
 
 ## Tools and Technologies
 
-The project utilizes the following tools and technologies:
+We’ve got some cool tech in our cat basket:
 
 - **Java 21**: The core programming language used for the project.
-- **Jakarta Servlet API**:  For handling HTTP requests and responses.
-- **Thymeleaf**: For rendering dynamic HTML content.
-- **SLF4J and Logback**: For logging information and debugging.
-- **JUnit 5**: For unit testing.
-- **Mockito**: For mocking objects in unit tests.
+- **Jakarta Servlet API**: For handling HTTP requests and responses.
+- **Thymeleaf**: For rendering dynamic HTML content, like a cozy cat box.
+- **SLF4J and Logback**: For keeping track of all cattivities.
+- **JUnit 5**: For making sure everything’s working purrfectly.
+- **Mockito**: For mocking objects during testing.
 - **JUnit & Mockito**: For writing and executing unit tests.
 - **Gradle**: Used for dependency management and building the project as a WAR (Web Application Archive) file.
 
@@ -43,12 +82,12 @@ The project utilizes the following tools and technologies:
 
 The application provides the following functionalities:
 
-1. **Display Current Time**: Displays the current time for a given timezone parameter. If no time zone is provided, the application defaults to UTC.
-2. **Time Zone Validation**: Validates the timezone parameter using `TimezoneValidateFilter`, retrieves the time zone from cookies if available. If the timezone is invalid, an error message is displayed.
-3. **Display Cat Activities**: Based on the time of day, displays different cat images and corresponding activity messages.
-4. **Cookie Storage**: Stores the last selected time zone in a cookie.
-5. **Error Handling**: If the timezone parameter is missing or incorrect, the user is shown a descriptive error page.
-6. **Formatted Time**: Displays the time in the format `yyyy-MM-dd HH:mm:ss` along with the UTC offset.
+1. **Display Current Time**: Shows you the time in the time zone you choose. If you don’t specify one, it defaults to UTC—like a cat that always knows where the sun is.
+2. **Time Zone Validation**: Checks if the time zone is valid using `TimezoneValidateFilter`. If it’s not, it’ll use a cookie-stored time zone if it finds one.
+3. **Display Cat Activities**: Shows different cat images and activities based on the time of day—like naps, playtime, or midnight zoomies.
+4. **Cookie Storage**: Remembers your chosen time zone in a cookie for the next time you visit.
+5. **Error Handling**: Shows an intimidating, but cute error message if the time zone isn’t quite right.
+6. **Formatted Time**: Displays the time in `yyyy-MM-dd HH:mm:ss` format, including the UTC offset.
 
 ## Usage Instructions
 
@@ -94,23 +133,23 @@ docker build -t tomcat-time-servlet:1.0 .
 
 To run the container:
 ```shell
-docker run -d -p 8080:8080 --name time-servlet-app tomcat-time-servlet:1.0
+docker run -d -p 8080:8080 --name time-cattivity tomcat-time-servlet:1.0
 ```
 
 ### Using the Application
 
-**View the Current Time**:
+**See What Cats Are Up To Now:**:
 
-1. Visit the main page http://localhost:8080/ to see a greeting and a button to check the cat activities at the current time:
-2. Click the `Show Cattivity` button or directly access the time page: http://localhost:8080/time
+1. Visit the main page http://localhost:8080/ to see a friendly greeting and a button to check the cat activities at the current time.
+2. Click the `Show Cattivity` button to go the time page: http://localhost:8080/time
 3. Enter your time zone in the text field and click button `Get Time`. Optionally, you can specify a time zone in the query parameter: http://localhost:8080/time?timezone=Europe/London
-4. This will display the current time for the specified time zone along with a corresponding cat image and cattivity message.
+4. This will display the current time and a cat picture that matches the time of day.
 
-The application will store your last selected time zone in a cookie. On subsequent visits, it will automatically display the time for the previously selected time zone, if you won't specify the time zone.
+The application stores your last selected time zone in a cookie. On the next visit, it will automatically display the time for the previously selected time zone, if you won't specify the new one.
 
 **Handling Invalid Timezones**:
 
-If an invalid or missing timezone parameter is provided, the application displays an error page with a 400 status code and a relevant message.
+If you type in a time zone that doesn’t exist, you’ll see a friendly error page with a message that explains the issue (400 status code).
 
 ### Example URLs
 
