@@ -7,6 +7,30 @@ Pick your time zone, and get a glimpse of the time with a related cat
 image and activity message. It even remembers your last selected 
 time zone with cookies, so it’s like your own personal time-keeping cat friend!
 
+## Tools and Technologies
+
+We’ve got some cool tech in our cat basket:
+
+- **Java 21**: The core programming language used for the project.
+- **Jakarta Servlet API**: For handling HTTP requests and responses.
+- **Thymeleaf**: For rendering dynamic HTML content, like a cozy cat box.
+- **SLF4J and Logback**: For keeping track of all cattivities.
+- **JUnit 5**: For making sure everything’s working purrfectly.
+- **Mockito**: For mocking objects during testing.
+- **JUnit & Mockito**: For writing and executing unit tests.
+- **Gradle**: Used for dependency management and building the project as a WAR (Web Application Archive) file.
+
+## Functionality
+
+The application provides the following functionalities:
+
+1. **Display Current Time**: Shows you the time in the time zone you choose. If you don’t specify one, it defaults to UTC—like a cat that always knows where the sun is.
+2. **Time Zone Validation**: Checks if the time zone is valid using `TimezoneValidateFilter`. If it’s not, it’ll use a cookie-stored time zone if it finds one.
+3. **Display Cat Activities**: Shows different cat images and activities based on the time of day—like naps, playtime, or midnight zoomies.
+4. **Cookie Storage**: Remembers your chosen time zone in a cookie for the next time you visit.
+5. **Error Handling**: Shows an intimidating, but cute error message if the time zone isn’t quite right.
+6. **Formatted Time**: Displays the time in `yyyy-MM-dd HH:mm:ss` format, including the UTC offset.
+
 ## Project Structure
 
 The project is organized into the following packages and components:
@@ -60,34 +84,6 @@ The project is organized into the following packages and components:
 - **org.example.util**: Helps out with rendering HTML pages, like a cat making sure everything’s just right.
 
   - `ThymeleafRenderer`: Handles Thymeleaf templates, including error pages for when things don't go as planned.
-- **webapp/WEB-INF/templates**: Home of the HTML templates for all the pages.
-
-  - `time.html`: The main template for showing the time, cat photo, and activity.
-  - `error.html`: The template that gives you a heads-up if something’s not quite right.
-
-## Tools and Technologies
-
-We’ve got some cool tech in our cat basket:
-
-- **Java 21**: The core programming language used for the project.
-- **Jakarta Servlet API**: For handling HTTP requests and responses.
-- **Thymeleaf**: For rendering dynamic HTML content, like a cozy cat box.
-- **SLF4J and Logback**: For keeping track of all cattivities.
-- **JUnit 5**: For making sure everything’s working purrfectly.
-- **Mockito**: For mocking objects during testing.
-- **JUnit & Mockito**: For writing and executing unit tests.
-- **Gradle**: Used for dependency management and building the project as a WAR (Web Application Archive) file.
-
-## Functionality
-
-The application provides the following functionalities:
-
-1. **Display Current Time**: Shows you the time in the time zone you choose. If you don’t specify one, it defaults to UTC—like a cat that always knows where the sun is.
-2. **Time Zone Validation**: Checks if the time zone is valid using `TimezoneValidateFilter`. If it’s not, it’ll use a cookie-stored time zone if it finds one.
-3. **Display Cat Activities**: Shows different cat images and activities based on the time of day—like naps, playtime, or midnight zoomies.
-4. **Cookie Storage**: Remembers your chosen time zone in a cookie for the next time you visit.
-5. **Error Handling**: Shows an intimidating, but cute error message if the time zone isn’t quite right.
-6. **Formatted Time**: Displays the time in `yyyy-MM-dd HH:mm:ss` format, including the UTC offset.
 
 ## Usage Instructions
 
