@@ -7,14 +7,19 @@
             font-family: 'CustomFont';
             src: url('/fonts/Cattie-Regular.ttf') format('truetype');
         }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #ffe6e6;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 20px;
         }
         .error-container {
             width: 90%;
