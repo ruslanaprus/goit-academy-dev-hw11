@@ -46,7 +46,7 @@ public class TimezoneValidateFilter extends HttpFilter {
                 zoneId = timezoneService.getZoneId(timezoneParam);
             } catch (DateTimeException e) {
                 logger.warn("Invalid timezone parameter: {}", timezoneParam, e);
-                ThymeleafRenderer.renderErrorPage(res, engine, "Invalid timezone parameter!", HttpServletResponse.SC_BAD_REQUEST);
+                ThymeleafRenderer.renderErrorPage(res, engine, "You shall not paws!", HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
         } else {
