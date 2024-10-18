@@ -7,14 +7,24 @@
             font-family: 'CustomFont';
             src: url('/fonts/Cattie-Regular.ttf') format('truetype');
         }
+
+        /* Reset and styling adjustments */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0;
+            min-height: 100vh;
+            padding: 20px;
         }
+
         .container {
             display: flex;
             justify-content: space-between;
@@ -22,62 +32,59 @@
             max-width: 1100px;
             width: 100%;
             padding: 20px;
+            gap: 20px;
         }
+
         .text-container {
             flex: 2;
             text-align: left;
-            padding-right: 40px;
         }
-        .message{
-            font-size: 30px;
-        }
+
         h1 {
             font-size: 50px;
             font-family: 'CustomFont', Arial, sans-serif;
             color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
+
         p {
             font-size: 20px;
             margin: 10px 0;
         }
-        .button-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
+
+        .message {
+            font-size: 30px;
+            margin-bottom: 20px;
         }
-        a {
-            text-decoration: none;
-            color: white;
-            font-size: 16px;
-            padding: 10px 20px;
-            background-color: #008CBA;
-            border: 2px solid #008CBA;
-            border-radius: 5px;
-            transition: 0.3s;
-            text-align: center;
-        }
-        a:hover {
-            background-color: #005f73;
-        }
-        img {
-            max-width: 600px;
-            height: auto;
-            border-radius: 8px;
-        }
+
+        /* Form container with label and input adjustments */
         .form-container {
-            margin-top: 50px;
-            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
         }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 18px;
+            color: #555;
+        }
+
         input[type="text"] {
             padding: 10px;
             font-size: 16px;
             border: 2px solid #ccc;
             border-radius: 5px;
-            width: 100%;
-            box-sizing: border-box;
+            flex: 1;
         }
-        input[type="submit"], a {
+
+        input[type="submit"] {
             padding: 10px 20px;
             font-size: 16px;
             border: 2px solid #008CBA;
@@ -87,29 +94,80 @@
             cursor: pointer;
             transition: 0.3s;
         }
-        input[type="submit"]:hover, a:hover {
+
+        input[type="submit"]:hover {
             background-color: #005f73;
         }
-        .action-buttons {
+
+        /* Separator for clarity */
+        .separator {
+            height: 2px;
+            width: 100%;
+            background-color: #ddd;
+            margin: 15px 0;
+        }
+
+        /* Button container for links */
+        .link-buttons {
             display: flex;
             justify-content: space-between;
-            width: 100%;
-            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .link-buttons a {
+            text-decoration: none;
+            color: #008CBA;
+            font-size: 16px;
+            padding: 10px;
+            flex: 1;
+            text-align: center;
+            background-color: white;
+            border: 2px solid #008CBA;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .link-buttons a:hover {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        /* Image styling */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
         }
 
         /* Media query for smaller screens */
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
             .container {
                 flex-direction: column;
                 align-items: center;
+                gap: 30px;
             }
+
             .text-container {
-                padding-right: 0;
                 text-align: center;
             }
+
             img {
                 max-width: 100%;
                 margin-top: 20px;
+            }
+
+            .input-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .separator {
+                margin: 20px 0;
+            }
+
+            .link-buttons {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -126,12 +184,20 @@
         <!-- Timezone input form -->
         <div class="form-container">
             <form action="/time" method="GET">
-                <label for="timezone">Enter Timezone:</label><br>
-                <input type="text" id="timezone" name="timezone" placeholder="e.g. UTC+2"><br><br>
+                <!-- Label and input with submit button -->
+                <div class="input-group">
+                    <label for="timezone">Enter Timezone:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="timezone" name="timezone" placeholder="e.g. UTC+2">
+                        <input type="submit" value="Get Time">
+                    </div>
+                </div>
 
-                <!-- Submit and navigation buttons in one line -->
-                <div class="action-buttons">
-                    <input type="submit" value="Get Time">
+                <!-- Horizontal separator -->
+                <div class="separator"></div>
+
+                <!-- Link buttons on one line (responsive) -->
+                <div class="link-buttons">
                     <a href="/time?timezone=UTC">Get UTC Time</a>
                     <a href="/">Back to Home</a>
                 </div>

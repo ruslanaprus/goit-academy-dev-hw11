@@ -1,36 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Servlet Example</title>
     <style>
         @font-face {
             font-family: 'CustomFont';
             src: url('/fonts/Cattie-Regular.ttf') format('truetype');
         }
+
+        /* Reset basic margins and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding-top: 10px;
+            padding: 20px;
         }
+
         .container {
             text-align: center;
             max-width: 600px;
-            margin: 0 auto;
+            width: 100%;
         }
+
         h1 {
             font-family: 'CustomFont', Arial, sans-serif;
             color: #333;
             margin-bottom: 20px;
+            font-size: 28px;
         }
+
         p {
             font-size: 20px;
             margin: 10px 0;
         }
+
         a {
             text-decoration: none;
             color: #008CBA;
@@ -41,23 +55,40 @@
             transition: 0.3s;
             display: inline-block;
         }
+
         a:hover {
             background-color: #008CBA;
             color: white;
         }
+
+        /* Image styles to meet the requirements */
         img {
-            max-width: 80%;
+            max-width: 90%;
+            max-height: 50vh; /* Ensures the image doesn't take more than 50% of the viewport height */
             height: auto;
             margin: 10px 0;
+            min-height: 200px;
+        }
+
+        /* Ensure content stays centered, even on small screens */
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%; /* Allow the content to stretch as needed */
+            gap: 20px;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Welcome to Cattivity Time</h1>
-    <img src="/images/greeting_cat.png" alt="Cat image">
-    <p>Click the button below to check what cats are doing now:</p>
-    <a href="/time">Show Cattivity</a>
+    <div class="content-wrapper">
+        <h1>Welcome to Cattivity Time</h1>
+        <img src="/images/greeting_cat.png" alt="Cat image">
+        <p>Click the button below to check what cats are doing now:</p>
+        <a href="/time">Show Cattivity</a>
+    </div>
 </div>
 </body>
 </html>
