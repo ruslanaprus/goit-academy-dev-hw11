@@ -44,12 +44,18 @@
             background-color: #008CBA;
             color: white;
         }
+        img {
+            max-width: 60%;
+            height: auto;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
 <div class="error-container">
     <h1 th:text="'Error ' + ${statusCode}">Error</h1>
     <p th:text="${message}">An unexpected error occurred.</p>
+    <img th:src="${catImage}" alt="Cat image">
     <p><a href="/">Back to Home</a></p>
 </div>
 </body>

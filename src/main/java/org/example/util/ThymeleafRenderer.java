@@ -30,6 +30,7 @@ public class ThymeleafRenderer {
         Context context = new Context();
         context.setVariable("statusCode", statusCode);
         context.setVariable("message", errorMessage);
+        context.setVariable("catImage", "/images/error.png");
 
         render(res, engine, "error", context);
         logger.debug("Rendered error page with status {} and message: {}", statusCode, errorMessage);
