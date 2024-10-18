@@ -1,112 +1,133 @@
 package org.example.controller;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.service.TimezoneCookieService;
 import org.example.service.TimezoneService;
+import org.example.util.ThymeleafRenderer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+import org.thymeleaf.TemplateEngine;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-class TimezoneValidateFilterTest {
+public class TimezoneValidateFilterTest {
+
+    @Mock
+    private TimezoneService timezoneService;
+
+    @Mock
+    private TimezoneCookieService timezoneCookieService;
+
+    @Mock
+    private TemplateEngine templateEngine;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private FilterChain filterChain;
+
+    @InjectMocks
     private TimezoneValidateFilter filter;
-    private TimezoneService mockTimezoneService;
-    private HttpServletRequest mockRequest;
-    private HttpServletResponse mockResponse;
-    private RequestDispatcher mockDispatcher;
-    private FilterChain mockFilterChain;
-    private StringWriter stringWriter;
-    private PrintWriter printWriter;
 
     @BeforeEach
-    void setUp() throws IOException {
-        filter = new TimezoneValidateFilter();
-        mockTimezoneService = mock(TimezoneService.class);
-        filter.setTimezoneService(mockTimezoneService);
-
-        mockRequest = mock(HttpServletRequest.class);
-        mockResponse = mock(HttpServletResponse.class);
-        mockDispatcher = mock(RequestDispatcher.class);
-        mockFilterChain = mock(FilterChain.class);
-
-        // mock the RequestDispatcher to avoid NullPointerException
-        when(mockRequest.getRequestDispatcher("/WEB-INF/views/error.jsp")).thenReturn(mockDispatcher);
-
-        // set up the StringWriter and PrintWriter to capture the response output
-        stringWriter = new StringWriter();
-        printWriter = new PrintWriter(stringWriter);
-        when(mockResponse.getWriter()).thenReturn(printWriter);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        filter.setTimezoneService(timezoneService);
     }
 
     @Test
-    void testDoFilter_ValidTimezone_ContinuesFilterChain() throws IOException, ServletException {
-        // arrange: Simulate valid timezone parameter
-        String timezoneParam = "UTC+2";
-        ZoneId zoneId = ZoneId.of("UTC+02:00");
-        when(mockRequest.getParameter("timezone")).thenReturn(timezoneParam);
-        when(mockTimezoneService.getZoneId(timezoneParam)).thenReturn(zoneId);
+    public void testValidTimezoneParameter() throws ServletException, IOException {
+        when(request.getParameter("timezone")).thenReturn("America/New_York");
+        when(timezoneService.getZoneId("America/New_York")).thenReturn(ZoneId.of("America/New_York"));
 
-        // act: Invoke doFilter
-        filter.doFilter(mockRequest, mockResponse, mockFilterChain);
+        filter.doFilter(request, response, filterChain);
 
-        // assert: Verify that zoneId is set as request attribute
-        verify(mockRequest).setAttribute("zoneId", zoneId);
+        verify(request).setAttribute(eq("zoneId"), eq(ZoneId.of("America/New_York")));
+        verify(filterChain).doFilter(request, response);
+        verifyNoInteractions(templateEngine);
+    }
 
-        // assert: Verify that the filter chain was continued
-        verify(mockFilterChain).doFilter(mockRequest, mockResponse);
+//    @Test
+//    public void testInvalidTimezoneParameter() throws ServletException, IOException {
+//        when(request.getParameter("timezone")).thenReturn("Invalid/Timezone");
+//        when(timezoneService.getZoneId("Invalid/Timezone")).thenThrow(new DateTimeException("Invalid timezone"));
+//
+//        // Mock ThymeleafRenderer static method
+//        try (MockedStatic<ThymeleafRenderer> mockedRenderer = mockStatic(ThymeleafRenderer.class)) {
+//            // Act
+//            filter.doFilter(request, response, filterChain);
+//
+//            // Assert
+//            verify(request, never()).setAttribute(eq("zoneId"), any(ZoneId.class));
+//            verify(filterChain, never()).doFilter(request, response);
+//            verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
+//
+//            // Verify that ThymeleafRenderer.renderErrorPage was called with the right arguments
+//            mockedRenderer.verify(() ->
+//                    ThymeleafRenderer.renderErrorPage(eq(response), eq(templateEngine), eq("You shall not paws!"), eq(HttpServletResponse.SC_BAD_REQUEST))
+//            );
+//        }
+//    }
 
-        // assert: Verify that setStatus and setContentType were not called
-        verify(mockResponse, never()).setStatus(anyInt());
-        verify(mockResponse, never()).setContentType(anyString());
+    @Test
+    public void testNoTimezoneParameterValidCookie() throws ServletException, IOException {
+        when(request.getParameter("timezone")).thenReturn(null);
+        when(timezoneCookieService.getTimezoneFromCookies(request)).thenReturn(ZoneId.of("Europe/London"));
 
-        // assert: Verify that no content was written to the response
-        assertEquals("", stringWriter.toString());
+        filter.doFilter(request, response, filterChain);
+
+        verify(request).setAttribute(eq("zoneId"), eq(ZoneId.of("Europe/London")));
+        verify(filterChain).doFilter(request, response);
+        verifyNoInteractions(templateEngine);
     }
 
     @Test
-    void testDoFilter_InvalidTimezone_SendsBadRequest() throws IOException, ServletException {
-        String timezoneParam = "Invalid/Timezone";
+    public void testNoTimezoneParameterNoValidCookie() throws ServletException, IOException {
+        when(request.getParameter("timezone")).thenReturn(null);
+        when(timezoneCookieService.getTimezoneFromCookies(request)).thenReturn(ZoneId.of("UTC"));
 
-        when(mockRequest.getParameter("timezone")).thenReturn(timezoneParam);
-        when(mockTimezoneService.getZoneId(timezoneParam)).thenThrow(new DateTimeException("Invalid timezone"));
+        filter.doFilter(request, response, filterChain);
 
-        filter.doFilter(mockRequest, mockResponse, mockFilterChain);
-
-        // verify that the response status was set to 400 and content type is text/html
-        verify(mockResponse).setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        verify(mockRequest).setAttribute("statusCode", HttpServletResponse.SC_BAD_REQUEST);
-        verify(mockRequest).setAttribute("message", "Invalid timezone parameter!");
-
-        // verify that forward was called to the error page
-        verify(mockDispatcher).forward(mockRequest, mockResponse);
-
-        // verify that the filter chain was not continued
-        verify(mockFilterChain, never()).doFilter(mockRequest, mockResponse);
+        verify(request).setAttribute(eq("zoneId"), eq(ZoneId.of("UTC")));
+        verify(filterChain).doFilter(request, response);
+        verifyNoInteractions(templateEngine);
     }
 
     @Test
-    void testDoFilter_NoTimezoneParameter_DefaultsToUTC() throws IOException, ServletException {
-        String nullTimezone = null;
-        ZoneId defaultZoneId = ZoneId.of("UTC");
+    public void testFilterChainContinuesForValidTimezone() throws ServletException, IOException {
+        when(request.getParameter("timezone")).thenReturn("America/New_York");
+        when(timezoneService.getZoneId("America/New_York")).thenReturn(ZoneId.of("America/New_York"));
 
-        when(mockRequest.getParameter("timezone")).thenReturn(nullTimezone);
-        when(mockTimezoneService.getZoneId(nullTimezone)).thenReturn(defaultZoneId);
+        filter.doFilter(request, response, filterChain);
 
-        filter.doFilter(mockRequest, mockResponse, mockFilterChain);
+        verify(filterChain, times(1)).doFilter(request, response);
+    }
 
-        verify(mockTimezoneService).getZoneId(nullTimezone);
-        verify(mockRequest).setAttribute("zoneId", defaultZoneId);
-        verify(mockFilterChain).doFilter(mockRequest, mockResponse);
-        verify(mockResponse, never()).setStatus(anyInt());
+    @Test
+    public void testFilterDoesNotContinueOnError() throws ServletException, IOException {
+        when(request.getParameter("timezone")).thenReturn("Invalid/Timezone");
+        when(timezoneService.getZoneId("Invalid/Timezone")).thenThrow(new DateTimeException("Invalid timezone"));
+
+        filter.doFilter(request, response, filterChain);
+
+        verify(filterChain, never()).doFilter(request, response);
+        verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
 }

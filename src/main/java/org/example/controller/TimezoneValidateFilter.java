@@ -29,6 +29,10 @@ public class TimezoneValidateFilter extends HttpFilter {
         this.timezoneCookieService = new TimezoneCookieService(timezoneService);
     }
 
+    public void setTimezoneService(TimezoneService timezoneService) {
+        this.timezoneService = timezoneService;
+    }
+
     @Override
     public void init() throws ServletException {
         super.init();

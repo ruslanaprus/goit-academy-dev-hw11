@@ -32,6 +32,10 @@ public class TimeServlet extends HttpServlet {
         this.timezoneCookieService = new TimezoneCookieService(new TimezoneService());
     }
 
+    public void setTimeResponseBuilder(TimeResponseBuilder timeResponseBuilder) {
+        this.timeResponseBuilder = timeResponseBuilder;
+    }
+
     @Override
     public void init() throws ServletException {
         super.init();
