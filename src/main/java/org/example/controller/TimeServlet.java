@@ -26,6 +26,7 @@ public class TimeServlet extends HttpServlet {
     private TimeResponseBuilder timeResponseBuilder;
     private TimezoneCookieService timezoneCookieService;
     private TemplateEngine engine;
+    private ThymeleafRenderer thymeleafRenderer;
 
     public TimeServlet() {
         this.timeResponseBuilder = new TimeResponseBuilder();
@@ -34,6 +35,10 @@ public class TimeServlet extends HttpServlet {
 
     public void setTimeResponseBuilder(TimeResponseBuilder timeResponseBuilder) {
         this.timeResponseBuilder = timeResponseBuilder;
+    }
+
+    public void setThymeleafRenderer(ThymeleafRenderer thymeleafRenderer) {
+        this.thymeleafRenderer = thymeleafRenderer;
     }
 
     @Override
