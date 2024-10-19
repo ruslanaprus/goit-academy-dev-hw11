@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.thymeleaf.TemplateEngine;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -25,6 +26,9 @@ class TimeServletTest {
 
     @Mock
     private TimezoneCookieService timezoneCookieService;
+
+    @Mock
+    private TemplateEngine templateEngine;
 
     @Mock
     private HttpServletRequest request;
