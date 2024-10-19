@@ -6,12 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.service.TimezoneCookieService;
 import org.example.service.TimezoneService;
-import org.example.util.ThymeleafRenderer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.thymeleaf.TemplateEngine;
 
@@ -62,29 +60,21 @@ public class TimezoneValidateFilterTest {
         verify(request).setAttribute(eq("zoneId"), eq(ZoneId.of("America/New_York")));
         verify(filterChain).doFilter(request, response);
         verifyNoInteractions(templateEngine);
+        verify(response, never()).setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-//    @Test
-//    public void testInvalidTimezoneParameter() throws ServletException, IOException {
-//        when(request.getParameter("timezone")).thenReturn("Invalid/Timezone");
-//        when(timezoneService.getZoneId("Invalid/Timezone")).thenThrow(new DateTimeException("Invalid timezone"));
-//
-//        // Mock ThymeleafRenderer static method
-//        try (MockedStatic<ThymeleafRenderer> mockedRenderer = mockStatic(ThymeleafRenderer.class)) {
-//            // Act
-//            filter.doFilter(request, response, filterChain);
-//
-//            // Assert
-//            verify(request, never()).setAttribute(eq("zoneId"), any(ZoneId.class));
-//            verify(filterChain, never()).doFilter(request, response);
-//            verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//
-//            // Verify that ThymeleafRenderer.renderErrorPage was called with the right arguments
-//            mockedRenderer.verify(() ->
-//                    ThymeleafRenderer.renderErrorPage(eq(response), eq(templateEngine), eq("You shall not paws!"), eq(HttpServletResponse.SC_BAD_REQUEST))
-//            );
-//        }
-//    }
+    @Test
+    void testDoFilter_InvalidTimezone() throws IOException, ServletException {
+        when(request.getParameter("timezone")).thenReturn("Invalid/Timezone");
+        when(timezoneService.getZoneId("Invalid/Timezone")).thenThrow(new DateTimeException("Invalid timezone"));
+
+        filter.doFilter(request, response, filterChain);
+
+        verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        verify(response).setContentType("text/html");
+        verify(response).setCharacterEncoding("UTF-8");
+        verify(filterChain, never()).doFilter(any(HttpServletRequest.class), any(HttpServletResponse.class));
+    }
 
     @Test
     public void testNoTimezoneParameterValidCookie() throws ServletException, IOException {
