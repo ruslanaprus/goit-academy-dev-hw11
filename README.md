@@ -7,6 +7,20 @@ Pick your time zone, and get a glimpse of the time with a related cat
 image and activity message. It even remembers your last selected 
 time zone with cookies, so it’s like your own personal time-keeping cat friend!
 
+## Table of Contents
+1. **[Tools and Technologies](#tools-and-technologies)**
+2. **[Setup and Deployment Instructions](#setup-and-deployment-instructions)**
+   - **[Prerequisites](#prerequisites)**
+   - **[Setup Instructions](#setup-instructions)**
+   - **[Deploying the WAR file](#deploying-the-war-file)**
+   - **[Optional: Run with Docker](#optional-run-with-docker-remote)**
+3. **[Functionality](#functionality)**
+4. **[Project Structure](#project-structure)**
+5. **[Usage Instructions](#usage-instructions)**
+   - **[Using the Application](#using-the-application)**
+   - **[Example URLs](#example-urls)**
+
+
 ## Tools and Technologies
 
 We’ve got some cool tech in our cat basket:
@@ -19,6 +33,56 @@ We’ve got some cool tech in our cat basket:
 - **Mockito**: For mocking objects during testing.
 - **JUnit & Mockito**: For writing and executing unit tests.
 - **Gradle**: Used for dependency management and building the project as a WAR (Web Application Archive) file.
+
+## Setup and Deployment Instructions
+
+### Prerequisites
+
+- **Java 21** installed on your machine.
+- **Gradle** installed or use the provided Gradle wrapper (`gradlew`).
+- A **Java servlet container** like Apache Tomcat 10.
+
+### Setup Instructions
+
+1. **Clone the repository**:
+```shell
+git clone git@github.com:ruslanaprus/goit-academy-dev-hw11.git
+cd goit-academy-dev-hw11
+```
+
+2. **Build the project using Gradle**:
+
+```shell
+./gradlew build
+```
+### Deploying the WAR file
+
+1. The built `.war` file will be located in the `build/libs` directory.
+2. Deploy the `.war` file to your servlet container (e.g., place it to the `webapps` directory of your Tomcat server).
+3. **Start the server**:
+   - Start your servlet container (e.g., `catalina.sh run` for Tomcat).
+   - Visit `http://localhost:8080` to access the application.
+
+### Optional: Run Using Docker
+
+Alternatively, you can deploy the application using Docker with the official Tomcat 10 image from Docker Hub. You can modify the Dockerfile to use the latest image version if necessary.
+
+1. To do it locally, build the Docker image:
+
+```shell
+docker build -t tomcat-time-servlet:1.0 .
+```
+
+To run the container:
+```shell
+docker run -d -p 8080:8080 --name time-cattivity tomcat-time-servlet:1.0
+```
+
+2. **Run with Docker remotely**
+
+```bash
+docker run -d -p 8080:8080 --name time-cattivity ghcr.io/ruslanaprus/goit-academy-dev-hw11/time-servlet
+```
 
 ## Functionality
 
@@ -69,72 +133,12 @@ The project is organized into the following packages and components:
 ├──  gradlew.bat
 └──  settings.gradle
 ```
-- **org.example.controller**: Where all the purr-cessing happens—handling HTTP requests, checking time zones, and showing time-related pages with cute cat images.
-
-  - `TimeServlet`: Handles your requests to `/time`, figures out the time zone, and shows the right time and cat photo.
-  - `TimezoneValidateFilter`: Makes sure the time zone is valid and checks your cookies for any saved time zones.
-- **org.example.listener**: Sets up the template engine, like getting the food bowls ready.
-
-  - `TemplateEngineInitializer`: Prepares Thymeleaf, our template engine, so it can serve up some fresh HTML.
-- **org.example.service**: Deals with time formatting, time zone details, and cookie storage—like the cat that knows when it’s time to be fed.
-
-  - `TimeResponseBuilder`: Formats the time and fetches just the right cat picture and message.
-  - `TimezoneService`: Turns your chosen time zone into a valid `ZoneId`.
-  - `TimezoneCookieService`: Saves and retrieves your previous time zone choice using cookies. The cookie stays fresh for an hour.
-- **org.example.util**: Helps out with rendering HTML pages, like a cat making sure everything’s just right.
-
-  - `ThymeleafRenderer`: Handles Thymeleaf templates, including error pages for when things don't go as planned.
 
 ## Usage Instructions
 
-### Prerequisites
-
-- **Java 21** installed on your machine.
-- **Gradle** installed or use the provided Gradle wrapper (`gradlew`).
-- A **Java servlet container** like Apache Tomcat 10.
-
-### Setup Instructions
-
-1. **Clone the repository**:
-```shell
-git clone git@github.com:ruslanaprus/goit-academy-dev-hw11.git
-cd goit-academy-dev-hw11
-```
-   
-2. **Build the project using Gradle**:
-
-```shell
-./gradlew build
-```
-
-3. **Deploy the WAR file**:
-
-- The built `.war` file will be located in the `build/libs` directory.
-- Deploy the `.war` file to your servlet container (e.g., place it to the `webapps` directory of your Tomcat server).
-
-4. **Start the server**:
-
-- Start your servlet container (e.g., `catalina.sh run` for Tomcat).
-- Visit `http://localhost:8080` to access the application.
-
-**Optional: Deploy Using Docker**
-
-Alternatively, you can deploy the application using Docker with the official Tomcat 10 image from Docker Hub. You can modify the Dockerfile to use the latest image version if necessary.
-
-To build the Docker image:
-
-```shell
-docker build -t tomcat-time-servlet:1.0 .
-```
-
-To run the container:
-```shell
-docker run -d -p 8080:8080 --name time-cattivity tomcat-time-servlet:1.0
-```
-
 ### Using the Application
 
-**See What Cats Are Up To Now:**:
+**See What Cats Are Up To Now:**
 
 1. Visit the main page http://localhost:8080/ to see a friendly greeting and a button to check the cat activities at the current time.
 2. Click the `Show Cattivity` button to go the time page: http://localhost:8080/time
@@ -156,4 +160,4 @@ To view the time in a specific offset:
 http://localhost:8080/time?timezone=UTC+3
 
 Invalid timezone example:
-http://localhost:8080/time?timezone=InvalidZone
+http://localhost:8080/time?timezone=InvalidZone]
