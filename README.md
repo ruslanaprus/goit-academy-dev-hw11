@@ -27,12 +27,15 @@ We’ve got some cool tech in our cat basket:
 
 - **Java 21**: The core programming language used for the project.
 - **Jakarta Servlet API**: For handling HTTP requests and responses.
+- **Tomcat 10**: A servlet container to deploy and run the web application.
 - **Thymeleaf**: For rendering dynamic HTML content, like a cozy cat box.
 - **SLF4J and Logback**: For keeping track of all cattivities.
 - **JUnit 5**: For making sure everything’s working purrfectly.
 - **Mockito**: For mocking objects during testing.
 - **JUnit & Mockito**: For writing and executing unit tests.
 - **Gradle**: Used for dependency management and building the project as a WAR (Web Application Archive) file.
+- **Docker**: To build the application container for easy deployment.
+- **GitHub Actions**: Used for CI/CD, automating the build, test, and deployment.
 
 ## Setup and Deployment Instructions
 
